@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd   
+                        http://www.springframework.org/schema/tx  
+                        http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<bean id="quarzDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${druid.initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${druid.maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${druid.maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${druid.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${druid.maxWait}"></property>
+	
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+	<!--配置Quartz 完全基于数据库,无需配置自定义的job类， -->
+	<!-- 事先在数据库里面配置好quartz的信息,然后quartz自动去读取,并实例化 -->
+	<bean id="scheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobFactory">
+			<bean class="com.sgcc.quartz.JobFactory" />
+		</property>
+		<!--指定spring中配置的数据源为 quartz的数据源  -->
+		<property name="dataSource" ref="quarzDataSource" />
+		<property name="configLocation" value="classpath:config/quartz.properties" />
+		<property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
+		<property name="autoStartup" value="true" />
+		<!--延时启动，应用启动完后 QuartzScheduler 再启动,单位秒 -->    
+        <property name="startupDelay" value="10" />  
+	</bean>
+
+</beans>

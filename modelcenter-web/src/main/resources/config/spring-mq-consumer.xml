@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="mqDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${druid.initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${druid.maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${druid.maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${druid.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${druid.maxWait}"></property>
+
+		<property name="validationQuery" value="${druid.validationQuery}" />
+		<property name="testOnBorrow" value="${druid.testOnBorrow}" />
+	</bean>
+
+
+	<!-- <bean id="mqConsumer" class="com.aliyun.openservices.ons.api.bean.ConsumerBean">
+		<property name="properties"> 消费者配置信息
+			<props>
+				请替换 CID_mainstation_control
+				<prop key="ConsumerId">CID_TEST100</prop>
+				<prop key="AccessKey">a991a528e0aa41a19a5ba3921115b2f6</prop>
+				<prop key="SecretKey">zsH4uH0I8MT6kfHGK2kQB4OWGG4=</prop>
+				<prop key="ONSAddr">http://172.169.101.121:8080/rocketmq/nsaddr4broker-internal
+				</prop>
+			</props>
+		</property>
+	</bean> -->
+
+	<!-- ConsumerBean管理类，用法：
+		如果注入consumerBean的话数据库中配的所有listener全都使用此配置来监听
+		否则从数据表rkmq_consumer_config中获取配置并实例化consumerBean，可以配置多个.
+		dataSource数据源必须注入，可以设置为mybatis/hibernate的数据源
+	 -->
+	<bean id="consumerManager" class="com.sgcc.mq.ConsumerManager"
+		init-method="start" destroy-method="shutdown">
+		<!-- <property name="consumerBean" ref="mqConsumer"></property> -->
+		<property name="dataSource" ref="mqDataSource"></property>
+	</bean>
+</beans>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>表格展示示例</title>
+    <script type="text/javascript" src="../assets/js/lib/vue/vue.min.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/vue/vue-router.js"></script>
+    <script type="text/javascript"
+            src="../assets/js/lib/vue/vue-resource.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../assets/js/lib/element-ui/index.css">
+    <!-- 引入组件库 -->
+    <script type="text/javascript"
+            src="../assets/js/lib/element-ui/index.js"></script>
+    
+</head>
+<body>
+<div id="box">
+	<!-- <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+            <i class="el-icon-date"></i> 数据管理
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+    </el-breadcrumb> -->
+    <el-container>
+        <el-header>
+            <el-form :inline="true" :model="param" class="demo-form-inline">
+                <el-form-item label="用户编号">
+                    <el-input v-model="param.userId" placeholder="用户编号" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="用户名">
+                    <el-input  v-model="param.username" placeholder="用户名" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="param.sex" placeholder="请选择" clearable>
+                        <el-option
+                                label="男"
+                                value="1">
+                        </el-option>
+                        <el-option
+                                label="女"
+                                value="0">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="success" icon="el-icon-search" @click="search">搜索</el-button>
+                </el-form-item>
+            </el-form>
+        </el-header>
+        <el-main>
+            <el-table :data="list" border  v-loading="option.loading" height="700" highlight-current-row>
+                <el-table-column v-for="h in header"
+                                 :key="h.prop"
+                                 :prop="h.prop"
+                                 :label="h.label"
+                                 :formatter="h.calback">
+                </el-table-column>
+            </el-table>
+        </el-main>
+        <el-footer>
+            <el-pagination @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange" :current-page="param.currentPage"
+                           :page-sizes="option.pageSizes" :page-size="param.pageSize"
+                           layout="total, sizes, prev, pager, next, jumper" :total="option.total">
+            </el-pagination>
+        </el-footer>
+    </el-container>
+</div>
+
+<script type="text/javascript">
+    window.onload = function () {
+        let vm = new Vue({
+            el: '#box',
+            data: {
+                header: [{
+                    label: "用户id",
+                    prop: "userId"
+                }, {
+                    label: "性别",
+                    prop: "sex",
+                    calback: function (row, column) {
+                        return vm.formatSex(row.sex);
+                    }
+                }, {
+                    label: "用户名",
+                    prop: "username"
+                }],
+                list: [],//显示数据
+                param:{
+                	currentPage: 1,
+                    pageSize:10,
+                	userId:'',
+                    username:'',
+                    sex:''
+                },
+                option:{
+                	total: 0,
+                    loading:true,//菊花转
+                    pageSizes:[10,20,50,100]//分页大小
+                }
+            },
+            created:function(){//dom未加载前初始化调用
+            	this.param.pageSize=this.option.pageSizes[1];
+            },
+            mounted: function () {//dom加载后调用
+                this.get();
+            },
+            methods: {
+                get: function () {
+                    //发送get请求
+                    this.$http.get('/demo/getList', {
+                        params: this.param
+                    }).then(function (res) {
+                        this.option.loading=false;
+                        this.list = res.body.dataList;
+                        this.option.total = res.body.total;
+                        this.$notify({
+                            title: '成功',
+                            message: '数据获取成功',
+                            type: 'success'
+                        });
+                    }, function () {
+                    	this.option.loading=false;
+                        this.$notify({
+                            title: '错误',
+                            message: '服务器发生错误',
+                            type: 'error'
+                        });
+                    });
+                },
+                search:function(){
+                    this.param.currentPage=1;
+                    this.get();
+                },
+                formatSex: function (value) {
+                    return value == 1 ? "男" : "女";
+                },
+                // 初始页currentPage、初始每页数据数pageSize和数据data
+                handleSizeChange: function (size) {
+                    this.param.pageSize = size;
+                    this.param.currentPage = 1;
+                    console.log(this.param.pageSize);  //每页下拉显示数据
+                    this.get();
+                },
+                handleCurrentChange: function (currentPage) {
+                    this.param.currentPage = currentPage;
+                    console.log(this.param.currentPage);  //点击第几页
+                    this.get();
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgcc.web.mapper.extend.DemoMapperExtend">
+  <resultMap id="ResultMap" type="com.sgcc.web.entity.Demo">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
+  
+  <select id="selectByUsername" parameterType="String" resultMap="ResultMap" >
+  		select * from Demo where username=#{username}
+  </select>
+</mapper>

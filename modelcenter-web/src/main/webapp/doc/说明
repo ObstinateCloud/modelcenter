@@ -1,0 +1,47 @@
+
+mybatis逆向生成entity和mapper：
+	generatorConfig.xml配置文件中配置了文件生成的路径，和表映射。
+	如数据库表字段发生改变，修改对应的table节点即可，然后运行util包里的GeneratorSqlmap.java。
+	工具生成的文件不建议修改，以免发生意外
+	
+	
+拓展mybatis的mapper：
+	工具生成的sql功能不够用的时候可以自行拓展，步骤如下
+	1.在com.sgcc.web.mapper.extend包中新建一个接口，命名规则xxxMapperExtend.java,并在里面新增方法。
+	2.在src/main/resources/mybatis/mapper/extend文件夹中新建一个xml，命名规则xxxMapperExtend.xml,
+	并新增sql语句和xxxMapperExtend.java方法对应。
+
+
+分页查询：
+	使用mybatis的pagehelper插件
+	示例：
+	获取第1页，每页大小3
+	PageHelper.startPage(1, 3);
+	List<Demo> list=demoDao.selectByExample(new DemoExample());
+	注意：PageHelper.startPage(1, 3)后一定要紧跟sql查询，不然会造成分页混乱
+	
+	
+mybatis条件查询：
+	对于简单的单表查询可以使用工具生成的条件封装类Example类，在entity包下
+	示例：
+	查询条件为用户名是“张三”的记录
+	DemoExample demoExample=new DemoExample();
+	Criteria a=demoExample.createCriteria();
+	a.andUsernameEqualTo("张三");
+	List<Demo> list=demoDao.selectByExample(demoExample);
+	
+	
+发送mq消息：
+	ProducerBean producerBean=producerManager.getProducer("PID_TEST");
+	Message message=new Message();
+	message.setBody("hello world".getBytes());
+	message.setTopic(MQMessage.TEST.topic());
+	message.setTag(MQMessage.TEST.tag());
+	producerBean.send(message);
+	
+	getProducer方法通过PID获取生产者发送mq消息。producerManager基于数据库配置mq源,一个源对应一个生产者，对应一个PID
+
+使用缓存：
+	在service的方法上添加@Cacheable注解，详情请见spring缓存注解@Cacheable、@CacheEvict、@CachePut的使用
+
+		

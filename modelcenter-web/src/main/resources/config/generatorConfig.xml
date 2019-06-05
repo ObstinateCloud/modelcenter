@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!--数据库配置 -->
+	<properties resource="config/db.properties" />
+
+	<context id="testTables" targetRuntime="MyBatis3">
+		<!--覆盖生成XML文件 -->
+		<plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+		<!-- 给实体类生成toString方法 -->
+		<plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+		<commentGenerator type="com.sgcc.web.util.MyBatisCommentGenerator">
+			<!-- 设置编码为utf-8 -->
+			<property name="javaFileEncoding" value="UTF-8" />
+			<!-- 是否去除自动生成的注释 ture:是 false：否 -->
+			<!-- <property name="suppressAllComments" value="true" /> -->
+		</commentGenerator>
+		<!-- 数据库连接的信息 -->
+		<jdbcConnection driverClass="${jdbc.driverClassName}"
+			connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+		</jdbcConnection>
+
+		<!-- 默认false，把JDBC DECIMAL和NUMERIC类型解析为Integer，为true时解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="true" />
+		</javaTypeResolver>
+
+		<!-- targetProject:生成pojo类的位置 -->
+		<javaModelGenerator targetPackage="com.sgcc.web.entity"
+			targetProject="src\main\java">
+			<!-- enableSubPackages:是否让schame作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<!-- <property name="trimStrings" value="true"/> -->
+		</javaModelGenerator>
+
+		<!-- targetProject:mapper映射成文件的位置 -->
+		<sqlMapGenerator targetPackage="mybatis.mapper"
+			targetProject="src\main\resources">
+			<!-- enableSubPackages:是否让schame作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- targetPackage:mapper接口生成的位置 -->
+		<javaClientGenerator targetPackage="com.sgcc.web.mapper"
+			type="XMLMAPPER" targetProject="src\main\java">
+			<!-- enableSubPackages: 是否让schame作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<!-- 指定数据库表 -->
+		<!-- 有些表的字段需要指定java类型 -->
+		<!-- <table schema="" tableName=""> <columnOverride column="" javaType=""/> 
+			</table> -->
+		<!-- 实体映射建议表前缀也加上 -->
+		<!-- <table schema="" tableName="ht_grade" domainObjectName="Grade"></table> -->
+		<table schema="" tableName="demo" domainObjectName="Demo"></table>
+	</context>
+</generatorConfiguration>

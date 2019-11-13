@@ -15,7 +15,7 @@
 		<!-- 工具包 -->
 		<!-- json start -->
 		<jackson.version>1.8.4</jackson.version>
-		<jackson.core.version>2.5.4</jackson.core.version>
+		<jackson.core.version>2.10.1</jackson.core.version>
 		<json-lib.version>2.1</json-lib.version>
 		<fastjson-lib.version>1.2.6</fastjson-lib.version>
 		<!-- 数据库组件包 _start -->

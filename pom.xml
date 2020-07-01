@@ -35,7 +35,7 @@
 		<!-- axis2 -->
 		<axis2.version>1.6.2</axis2.version>
 		<!-- 定时任务 -->
-		<quartz.version>2.2.2</quartz.version>
+		<quartz.version>2.3.2</quartz.version>
 		<!-- 解析excel -->
 		<poi.version>4.0.1</poi.version>
 		<!-- ali mq -->
